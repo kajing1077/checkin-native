@@ -44,7 +44,7 @@ export interface GameConfig {
   ACT_ID: string;
   successMessage: string;
   signedMessage: string;
-  game: string;
+  game: GameName;
   game_id: number;
   assets: {
     author: string;
