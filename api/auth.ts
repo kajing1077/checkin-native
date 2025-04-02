@@ -24,16 +24,23 @@ function getSignGameHeader(gameName: GameName): string {
   }
 }
 
-async function sign(signUrl: string, actId: string) {
+async function sign(
+  cookie: string,
+  signUrl: string,
+  actId: string,
+  gameName: GameName
+) {
   const options = {
+    headers: {
+      Cookie: cookie,
+      "x-rpc-signgame": getSignGameHeader(gameName),
+    },
     act_id: actId,
     lang: "ko-kr",
   };
 
   const response = await axios.post(`${signUrl}`, options);
   const data = response.data;
-
-  // console.log("sign", data);
 
   return data;
 }
@@ -63,7 +70,7 @@ async function getAwardsData(
   actId: string
 ) {
   console.log("gamename", gameName);
-  console.log(getSignGameHeader(gameName));
+
   const response = await axios.get(`${homeUrl}?lang=ko-kr&act_id=${actId}`, {
     headers: {
       Cookie: cookie,
@@ -111,13 +118,13 @@ async function getAccountInfo(
   const infoResult = await getSignInfo(
     cookie,
     gameConfig.url.info,
-    gameConfig.game as GameName,
+    gameConfig.game,
     gameConfig.ACT_ID
   );
   const awardList = await getAwardsData(
     cookie,
     gameConfig.url.home,
-    gameConfig.game as GameName,
+    gameConfig.game,
     gameConfig.ACT_ID
   );
   const awardIndex = infoResult.total_sign_day;
@@ -125,9 +132,10 @@ async function getAccountInfo(
   // console.log("aaa", awardList[awardIndex]);
 
   const signResult = await sign(
-    // cookie,
+    cookie,
     gameConfig.url.sign,
-    gameConfig.ACT_ID
+    gameConfig.ACT_ID,
+    gameConfig.game
   );
 
   console.log("signResult", signResult);
@@ -147,10 +155,10 @@ async function processGameData(cookie: string) {
   };
 
   for (const gameName in config) {
-    const gameData = config[gameName as GameName];
+    const gameData = config[gameName as keyof typeof config];
     if (gameData) {
       const result = await getAccountInfo(cookie, gameData.config);
-      results[gameName as GameName] = result;
+      results[gameName as keyof typeof config] = result;
     }
   }
 
