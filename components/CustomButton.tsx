@@ -1,12 +1,19 @@
 import React from "react";
-import { Pressable, PressableProps, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  Pressable,
+  PressableProps,
+  StyleProp,
+  StyleSheet,
+  Text,
+  ViewStyle,
+} from "react-native";
 import { colors } from "@/constants/colors";
 
-interface CustomButtonProps extends PressableProps{
+interface CustomButtonProps extends PressableProps {
   label: string;
   size?: "medium" | "large";
   variant?: "standard" | "filled" | "outlined";
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>;
 }
 
 function CustomButton({
@@ -23,7 +30,7 @@ function CustomButton({
         styles[size],
         styles[variant],
         pressed && styles.pressed,
-        style
+        style,
       ]}
       {...props}
     >
@@ -69,6 +76,6 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.8,
   },
-})
+});
 
 export default CustomButton;

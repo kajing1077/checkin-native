@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 import { Controller, useFormContext } from "react-hook-form";
 import InputField from "@/components/InputField";
 
-
 function CookieInput() {
   const { control } = useFormContext();
 
@@ -11,13 +10,7 @@ function CookieInput() {
     <Controller
       name="cookie"
       control={control}
-      render={({
-        field: {
-          onChange,
-          value
-        },
-        fieldState: { error }
-      }) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <InputField
           value={value}
           label="UID"
@@ -39,8 +32,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
-})
+});
 
 export default CookieInput;

@@ -8,7 +8,7 @@ import {
 import CustomButton from "@/components/CustomButton";
 import CookieInput from "@/components/CookieInput";
 import { FormProvider, useForm } from "react-hook-form";
-import { useGetAccountInfo } from "@/hooks/useAuth";
+import { useFetchGameData } from "@/hooks/useFetchGameData";
 import RewardList from "@/components/RewardList";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors } from "@/constants/colors";
@@ -31,7 +31,7 @@ export default function HomeScreen() {
 
   const inset = useSafeAreaInsets();
 
-  const { data, mutate, isPending } = useGetAccountInfo();
+  const { data, mutate, isPending } = useFetchGameData();
 
   useEffect(() => {
     loadSavedCookie();

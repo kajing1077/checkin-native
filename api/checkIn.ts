@@ -1,15 +1,6 @@
 import axios from "axios";
-import { AccountData, GameConfig, GameName } from "@/types";
+import { AccountData, GameConfig, GameName, RewardData } from "@/types";
 import { config } from "@/constants";
-
-type RewardData = {
-  isSign: boolean;
-  todayAward: {
-    cnt: number;
-    icon: string;
-    name: string;
-  };
-};
 
 function getSignGameHeader(gameName: GameName): string {
   switch (gameName) {
@@ -24,25 +15,26 @@ function getSignGameHeader(gameName: GameName): string {
   }
 }
 
-async function sign(
+async function checkIn(
   cookie: string,
   signUrl: string,
   actId: string,
   gameName: GameName
 ) {
-  const options = {
-    headers: {
-      Cookie: cookie,
-      "x-rpc-signgame": getSignGameHeader(gameName),
-    },
+  const data = {
     act_id: actId,
     lang: "ko-kr",
   };
 
-  const response = await axios.post(`${signUrl}`, options);
-  const data = response.data;
+  const config = {
+    headers: {
+      Cookie: cookie,
+      "x-Rpc-Signgame": getSignGameHeader(gameName),
+    },
+  };
 
-  return data;
+  const response = await axios.post(`${signUrl}`, data, config);
+  return response.data;
 }
 
 async function getSignInfo(
@@ -54,11 +46,9 @@ async function getSignInfo(
   const response = await axios.get(`${infoUrl}?lang=ko-kr&act_id=${actId}`, {
     headers: {
       Cookie: cookie,
-      "x-rpc-signgame": getSignGameHeader(gameName),
+      "x-Rpc-Signgame": getSignGameHeader(gameName),
     },
   });
-
-  // console.log(response);
 
   return response.data.data;
 }
@@ -74,7 +64,7 @@ async function getAwardsData(
   const response = await axios.get(`${homeUrl}?lang=ko-kr&act_id=${actId}`, {
     headers: {
       Cookie: cookie,
-      "x-rpc-signgame": getSignGameHeader(gameName),
+      "x-Rpc-Signgame": getSignGameHeader(gameName),
     },
   });
 
@@ -129,16 +119,12 @@ async function getAccountInfo(
   );
   const awardIndex = infoResult.total_sign_day;
 
-  // console.log("aaa", awardList[awardIndex]);
-
-  const signResult = await sign(
+  const signResult = await checkIn(
     cookie,
     gameConfig.url.sign,
     gameConfig.ACT_ID,
     gameConfig.game
   );
-
-  console.log("signResult", signResult);
 
   return {
     todayAward: awardList[awardIndex - 1],

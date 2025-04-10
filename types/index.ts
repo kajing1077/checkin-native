@@ -87,3 +87,12 @@ export interface SignInfoResponse {
   success: boolean;
   data?: SignInfoData;
 }
+
+export type RewardData = {
+  isSign: boolean;
+  todayAward: {
+    cnt: number;
+    icon: string;
+    name: string;
+  };
+};
